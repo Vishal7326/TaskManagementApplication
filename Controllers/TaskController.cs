@@ -31,7 +31,7 @@ namespace TaskManagementApplication.Controllers
         //IActionResult is an interface that allows you to return various kinds of HTTP responses from a controller action — making your controller
         //more flexible and RESTful.
 
-        public IActionResult GetAllEmployees() //This Method Can help you connecct to the database and can help u return live data from the database.
+        public IActionResult GetAllTasks() //This Method Can help you connecct to the database and can help u return live data from the database.
         {
             // InOrder to Connect to the database we need sbcontext 
             //The Purpose of Injecting DbContext in Programcs was to Access the dbContext anywhere in the program.
@@ -63,6 +63,35 @@ namespace TaskManagementApplication.Controllers
 
             return Ok(task);
         }
-    
+
+        //Trying to Update the Value or Properties from the list.
+        [HttpPut]
+        [Route("id:{guid}")]
+
+        public IActionResult UpdateTheResult(Guid id, UpdateTask updatetask) // To First Get the Result I must Find that specific Task by Id and then update the list.
+        {
+            var TaskUpdate = dbContext.Tasks.Find(id); // Find the specific Task by Id
+
+            if (TaskUpdate == null) // If the Task is not found then return NotFound
+            {
+                return NotFound();
+            }
+
+            // If the Task is found then update the properties of the Task
+
+            TaskUpdate.Title = updatetask.Title;
+
+            TaskUpdate.Description = updatetask.Description;
+
+            TaskUpdate.DueDate = updatetask.DueDate;
+
+            TaskUpdate.IsCompleted = updatetask.IsCompleted;
+
+            dbContext.SaveChanges(); // If You Forget to do this you will not see any changes in the db.
+
+            return Ok(TaskUpdate);
+        }
+
+
     }
 }
