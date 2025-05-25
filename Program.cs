@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TaskManagementApplication.Context;
+using TaskManagementApplication.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

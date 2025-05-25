@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskManagementApplication.Models;
+using TaskManagementApplication.Data;
 
 namespace TaskManagementApplication.Data
 {
@@ -7,6 +8,8 @@ namespace TaskManagementApplication.Data
     {
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }  // Add this
+       
+
+        public DbSet<TaskList> Tasks { get; set; }
     }
 }

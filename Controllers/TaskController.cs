@@ -1,53 +1,31 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using TaskManagementApplication.Context;
+﻿using Microsoft.AspNetCore.Mvc;
+using TaskManagementApplication.Data;
 using TaskManagementApplication.Dtos;
 using TaskManagementApplication.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TaskManagementApplication.Controllers
 {
-    //It Goes to the localhost port number that it is running on.
-    //localhost:xxxx/api/controller.
-    //In this case it would be 
-    //localhost:xxxx/api/employees.
     [Route("api/[controller]")]
     [ApiController]
     public class TaskController : ControllerBase
     {
-        private readonly ApplicationDbContext dbContext; //private field  
-        public TaskController(ApplicationDbContext dbContext) // Using ApplicationDbCOntext from the Data
+        private readonly ApplicationDbContext dbContext;
+
+        public TaskController(ApplicationDbContext dbContext)
         {
-            this.dbContext = dbContext; // Assigning the dbContext to the private field
+            this.dbContext = dbContext;
         }
 
-        //Reading All Tasks that User has created.
-
         [HttpGet]
-
-
-        //An Action Method is a public method in an ASP.NET Core Controller
-        //that responds to an HTTP request — like GET, POST, PUT, or DELETE.
-        //IActionResult is an interface that allows you to return various kinds of HTTP responses from a controller action — making your controller
-        //more flexible and RESTful.
-
-        public IActionResult GetAllTasks() //This Method Can help you connecct to the database and can help u return live data from the database.
+        public IActionResult GetAllTasks()
         {
-            // InOrder to Connect to the database we need sbcontext 
-            //The Purpose of Injecting DbContext in Programcs was to Access the dbContext anywhere in the program.
-            //Hence We are returning this to api we need to status ok.
             var allTasks = dbContext.Tasks.ToList();
-
             return Ok(allTasks);
-
         }
 
         [HttpPost]
-        public IActionResult AddTasks(AddTask addtask) //This Method Can help you connecct to the database and can help u return live data from the database.
+        public IActionResult AddTasks(AddTask addtask)
         {
-            //InOrder to Connect to the database we need sbcontext 
-            //The Purpose of Injecting DbContext in Programcs was to Access the dbContext anywhere in the program.
-            //Hence We are returning this to api we need to status ok.
             var task = new TaskList
             {
                 Title = addtask.Title,
@@ -56,63 +34,48 @@ namespace TaskManagementApplication.Controllers
                 IsCompleted = addtask.IsCompleted
             };
 
-            dbContext.Tasks.Add(task); // What we have is EmployeeDto but in add function it takes only entity 
-                                       // So we need to convert dto into entity
-
-            dbContext.SaveChanges(); // The actions that you want to make will be changed and saved.
+            dbContext.Tasks.Add(task);
+            dbContext.SaveChanges();
 
             return Ok(task);
         }
 
-        //Trying to Update the Value or Properties from the list.
         [HttpPut]
-        [Route("id:{guid}")]
-
-        public IActionResult UpdateTheResult(Guid id, UpdateTask updatetask) // To First Get the Result I must Find that specific Task by Id and then update the list.
+        [Route("{id:guid}")]
+        public IActionResult UpdateTheResult(Guid id, UpdateTask updatetask)
         {
-            var TaskUpdate = dbContext.Tasks.Find(id); // Find the specific Task by Id
+            var TaskUpdate = dbContext.Tasks.Find(id);
 
-            if (TaskUpdate == null) // If the Task is not found then return NotFound
+            if (TaskUpdate == null)
             {
                 return NotFound();
             }
 
-            // If the Task is found then update the properties of the Task
-
             TaskUpdate.Title = updatetask.Title;
-
             TaskUpdate.Description = updatetask.Description;
-
             TaskUpdate.DueDate = updatetask.DueDate;
-
             TaskUpdate.IsCompleted = updatetask.IsCompleted;
 
-            dbContext.SaveChanges(); // If You Forget to do this you will not see any changes in the db.
+            dbContext.SaveChanges();
 
             return Ok(TaskUpdate);
         }
 
-        //Deleting the Task of the user by Id.
-
         [HttpDelete]
-
-        [Route("id{guid}")]
-
-        public IActionResult DeleteTaskById(Guid id) // Here also we have to find the task first.
+        [Route("{id:guid}")]
+        public IActionResult DeleteTaskById(Guid id)
         {
             var DeleteTask = dbContext.Tasks.Find(id);
 
-            if ( DeleteTask is null)
+            if (DeleteTask is null)
             {
                 return NotFound();
             }
 
             dbContext.Tasks.Remove(DeleteTask);
-
             dbContext.SaveChanges();
 
             return Ok(DeleteTask);
         }
-     
     }
 }
