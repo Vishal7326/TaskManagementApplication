@@ -1,14 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskManagementApplication.Models;
 
-namespace TaskManagementApplication.Context
+namespace TaskManagementApplication.Data
 {
-    public class ApplicationDbContext :DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-        }
-        public DbSet<TaskList> Tasks { get; set; } 
+        public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
+        public DbSet<User> Users { get; set; }  // Add this
     }
 }
