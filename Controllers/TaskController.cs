@@ -92,6 +92,27 @@ namespace TaskManagementApplication.Controllers
             return Ok(TaskUpdate);
         }
 
+        //Deleting the Task of the user by Id.
 
+        [HttpDelete]
+
+        [Route("id{guid}")]
+
+        public IActionResult DeleteTaskById(Guid id) // Here also we have to find the task first.
+        {
+            var DeleteTask = dbContext.Tasks.Find(id);
+
+            if ( DeleteTask is null)
+            {
+                return NotFound();
+            }
+
+            dbContext.Tasks.Remove(DeleteTask);
+
+            dbContext.SaveChanges();
+
+            return Ok(DeleteTask);
+        }
+     
     }
 }
