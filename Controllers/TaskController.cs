@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagementApplication.Context;
+using TaskManagementApplication.Dtos;
+using TaskManagementApplication.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TaskManagementApplication.Controllers
@@ -37,8 +39,30 @@ namespace TaskManagementApplication.Controllers
             var allTasks = dbContext.Tasks.ToList();
 
             return Ok(allTasks);
+
         }
 
+        [HttpPost]
+        public IActionResult AddTasks(AddTask addtask) //This Method Can help you connecct to the database and can help u return live data from the database.
+        {
+            //InOrder to Connect to the database we need sbcontext 
+            //The Purpose of Injecting DbContext in Programcs was to Access the dbContext anywhere in the program.
+            //Hence We are returning this to api we need to status ok.
+            var task = new TaskList
+            {
+                Title = addtask.Title,
+                Description = addtask.Description,
+                DueDate = addtask.DueDate,
+                IsCompleted = addtask.IsCompleted
+            };
 
+            dbContext.Tasks.Add(task); // What we have is EmployeeDto but in add function it takes only entity 
+                                       // So we need to convert dto into entity
+
+            dbContext.SaveChanges(); // The actions that you want to make will be changed and saved.
+
+            return Ok(task);
+        }
+    
     }
 }
