@@ -1,6 +1,6 @@
 ﻿namespace TaskManagementApplication.Models
 {
-    public class Tasks
+    public class TaskList
     {
         public Guid Id { get; set; } // Generates unique identifier for each task
 
