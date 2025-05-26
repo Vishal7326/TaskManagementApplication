@@ -8,8 +8,8 @@ namespace TaskManagementApplication.Data
     {
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
-       
-
         public DbSet<TaskList> Tasks { get; set; }
+
+        public DbSet<User> Users { get; set; }
     }
 }
